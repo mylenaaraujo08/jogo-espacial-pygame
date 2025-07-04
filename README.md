@@ -84,7 +84,6 @@ Este é o método mais simples se você não usa Git.
 ## 📞 Contato
 
 Para mais informações sobre o projeto, entre em contato com a desenvolvedora:
-
 <br>
 <a href="https://github.com/mylenaaraujo08">
  <img src="https://avatars.githubusercontent.com/mylenaaraujo08?size=100" width="100px;" alt="Foto de Mylena Araújo" style="border-radius:50%"/>
