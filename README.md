@@ -2,8 +2,7 @@
 
 Uma homenagem à era de ouro dos arcades, onde apenas seus reflexos podem defender o universo de hordas alienígenas.
 
-![image](https://github.com/user-attachments/assets/faf662a5-16cc-4277-bdcd-ca4d3797bfc5)
-
+![Captura de tela 2025-07-04 000812](https://github.com/user-attachments/assets/a3fdc666-eb44-4c7c-97e0-880ed26b1429)
 
 Um clássico jogo de nave 2D com rolagem vertical, desenvolvido em Python com a biblioteca Pygame. Inspirado nos grandes clássicos de arcade, sua missão é defender a galáxia, destruindo ondas de asteroides e OVNIs que ameaçam seu setor.
 
