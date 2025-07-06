@@ -42,15 +42,20 @@ Este método é ideal se você tem Git instalado e quer acompanhar as atualizaç
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/mylenaaraujo08/jogo-espacial-pygame.git](https://github.com/mylenaaraujo08/jogo-espacial-pygame.git)
+    git clone [https://github.com/mylenaaraujo08/jogo-espacial-pygame.git]
     ```
 
-2.  **Instale a dependência (Pygame):**
+2. **Acesse a pasta do projeto:**
+    ```bash
+    cd jogo-espacial-pygame
+    ```
+
+3.  **Instale a dependência (Pygame):**
     ```bash
     pip install pygame
     ```
 
-3.  **Execute o jogo:**
+4.  **Execute o jogo:**
     ```bash
     python defensores_galacticos.py
     ```
@@ -64,10 +69,15 @@ Este é o método mais simples se você não usa Git.
     * Na página principal do repositório, clique no botão verde **`< > Code`**.
     * No menu que aparecer, clique em **`Download ZIP`**.
 
-2.  **Extraia o arquivo:**
+2. **Acesse a pasta do projeto:**
+    ```bash
+    cd jogo-espacial-pygame
+    ```
+    
+3.   **Extraia o arquivo:**
     * Encontre o arquivo `jogo-espacial-pygame-main.zip` que você baixou e descompacte-o em um local de sua preferência.
 
-3. **Instale a dependência (Pygame):**
+4. **Instale a dependência (Pygame):**
     ```bash
     pip install pygame
     ```
