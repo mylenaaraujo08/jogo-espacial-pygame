@@ -12,6 +12,7 @@ ALTURA_TELA = 600
 tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
 pygame.display.set_caption("Defensores Galácticos")
 
+# --- CORES ---
 BRANCO = (255, 255, 255)
 PRETO = (0, 0, 0)
 VERMELHO = (255, 0, 0)
@@ -20,15 +21,23 @@ CINZA = (100, 100, 100)
 VERDE = (0, 200, 0)
 LARANJA = (255, 165, 0)
 
+# --- CONSTANTES DO JOGO ---
 PERCENTUAL_PONTOS_FINAL = 0.80
 CHANCE_SPAWN_FINAL = 0.25
+MAX_VIDAS = 5
+INTERVALO_FIXO_SPAWN_CORACAO = 15000 # Coração aparece a cada 15 segundos.
 
+# --- CARREGAMENTO DE RECURSOS ---
 try:
     nave_img = pygame.image.load('images/nave.png').convert_alpha()
     ovni_img = pygame.image.load('images/ovni.png').convert_alpha()
     asteroide_img = pygame.image.load('images/asteroides.png').convert_alpha()
     laser_img = pygame.image.load('images/laser.png').convert_alpha()
     fundo_espaco_img = pygame.image.load('images/fundo_espaco.png').convert()
+    coracao_img = pygame.image.load('images/coracao.png').convert_alpha()
+    
+    som_vida_extra = pygame.mixer.Sound('sounds/vida_extra.mp3')
+    som_vitoria = pygame.mixer.Sound('sounds/vitoria.mp3')
     som_tiro = pygame.mixer.Sound('sounds/laser.mp3')
     som_explosao_inimigo = pygame.mixer.Sound('sounds/explosao.mp3')
     som_dano_nave = pygame.mixer.Sound('sounds/explosao.mp3')
@@ -38,17 +47,21 @@ except pygame.error as e:
     pygame.quit()
     exit()
 
+# --- REDIMENSIONAMENTO DE IMAGENS ---
 nave_img = pygame.transform.scale(nave_img, (60, 60))
 laser_img = pygame.transform.scale(laser_img, (10, 30))
 ovni_img = pygame.transform.scale(ovni_img, (84, 60))
 fundo_espaco_img = pygame.transform.scale(fundo_espaco_img, (LARGURA_TELA, ALTURA_TELA))
+coracao_img = pygame.transform.scale(coracao_img, (40, 40))
 
+# --- CONFIGURAÇÕES DE NÍVEIS ---
 NIVEIS = {
     1: {"nome": "Fácil", "velocidade_inimigo": 0.4, "intervalo_spawn": 9000, "aumento_spawn": 3, "aumento_velocidade": 0.00001, "pontos_para_vencer": 250},
     2: {"nome": "Médio", "velocidade_inimigo": 0.5, "intervalo_spawn": 9000, "aumento_spawn": 3, "aumento_velocidade": 0.00002, "pontos_para_vencer": 300},
     3: {"nome": "Difícil", "velocidade_inimigo": 0.9, "intervalo_spawn": 7000, "aumento_spawn": 5, "aumento_velocidade": 0.00005, "pontos_para_vencer": 300},
 }
 
+# --- ESTADOS DO JOGO ---
 ESTADO_TELA_INICIAL, ESTADO_TELA_INSTRUCOES, ESTADO_ESCOLHA_NIVEL = 0, 1, 2
 ESTADO_JOGANDO, ESTADO_PAUSADO, ESTADO_GAME_OVER, ESTADO_VITORIA = 3, 4, 5, 6
 
@@ -72,6 +85,7 @@ def show_text(surf, text, size, x, y, color=BRANCO):
     text_rect = text_surface.get_rect(center=(x, y))
     surf.blit(text_surface, text_rect)
 
+# --- CLASSES DO JOGO ---
 class Nave(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
@@ -97,7 +111,7 @@ class Nave(pygame.sprite.Sprite):
             laser = Laser(self.rect.centerx, self.rect.top)
             todos_sprites.add(laser)
             lasers.add(laser)
-            canal_tiro.play(som_tiro) 
+            canal_tiro.play(som_tiro)
 
 class Laser(pygame.sprite.Sprite):
     def __init__(self, x, y):
@@ -129,6 +143,22 @@ class Inimigo(pygame.sprite.Sprite):
         if self.rect.left < 0 or self.rect.right > LARGURA_TELA:
             self.velocidade_x *= -1
 
+class Coracao(pygame.sprite.Sprite):
+    def __init__(self):
+        super().__init__()
+        self.image = coracao_img
+        self.rect = self.image.get_rect(
+            x=random.randrange(LARGURA_TELA - self.image.get_width()),
+            y=random.randrange(-200, -150)
+        )
+        self.velocidade_y = 2 
+
+    def update(self):
+        self.rect.y += self.velocidade_y
+        if self.rect.top > ALTURA_TELA:
+            self.kill() 
+
+# --- FUNÇÕES DO JOGO ---
 def spawn_inimigo():
     if len(asteroides_grupo) + len(ovnis_grupo) < 10:
         if random.random() > 0.5:
@@ -139,35 +169,60 @@ def spawn_inimigo():
             ovnis_grupo.add(inimigo)
         todos_sprites.add(inimigo)
 
+def spawn_coracao():
+    coracao = Coracao()
+    todos_sprites.add(coracao)
+    coracoes_grupo.add(coracao)
+
 def reiniciar_jogo():
-    global pontuacao, som_tocado_game_over, jogador, modo_final_ativado
+    global pontuacao, som_tocado_game_over, som_tocado_vitoria, jogador, modo_final_ativado, last_spawn_time, last_spawn_time_coracao
     pontuacao = 0
     som_tocado_game_over = False
+    som_tocado_vitoria = False 
     modo_final_ativado = False
+    
     todos_sprites.empty()
     lasers.empty()
     asteroides_grupo.empty()
     ovnis_grupo.empty()
+    coracoes_grupo.empty() 
+    
     jogador = Nave()
     todos_sprites.add(jogador)
+    
+    now = pygame.time.get_ticks()
+    last_spawn_time = now
+    last_spawn_time_coracao = now
+
     for _ in range(2):
         spawn_inimigo()
 
+# --- INICIALIZAÇÃO DE VARIÁVEIS ---
 fonte_botao = pygame.font.Font(None, 40)
 pontuacao = 0
 som_tocado_game_over = False
+som_tocado_vitoria = False 
 modo_final_ativado = False
+
 todos_sprites = pygame.sprite.Group()
 lasers = pygame.sprite.Group()
 asteroides_grupo = pygame.sprite.Group()
 ovnis_grupo = pygame.sprite.Group()
+coracoes_grupo = pygame.sprite.Group()
 jogador = None
+
 clock = pygame.time.Clock()
 rodando = True
 
-intervalo_spawn_inimigos, last_spawn_time, velocidade_aumento_spawn = 5000, 0, 10
+# Temporizadores de Spawn
+intervalo_spawn_inimigos, velocidade_aumento_spawn = 5000, 10
+last_spawn_time = 0 
+last_spawn_time_coracao = 0 
+
+# Variáveis de Nível
 velocidade_inimigo_atual, aumento_velocidade_inimigo = 0.2, 0.00005
 
+# --- LOOP PRINCIPAL DO JOGO ---
 while rodando:
     clock.tick(60)
     mouse_pos = pygame.mouse.get_pos()
@@ -210,11 +265,10 @@ while rodando:
         pos_x = LARGURA_TELA//2 - largura_btn//2
         
         def iniciar_nivel(nivel):
-            global nivel_selecionado, estado_jogo, intervalo_spawn_inimigos, last_spawn_time, velocidade_inimigo_atual, aumento_velocidade_inimigo, velocidade_aumento_spawn
+            global nivel_selecionado, estado_jogo, intervalo_spawn_inimigos, velocidade_inimigo_atual, aumento_velocidade_inimigo, velocidade_aumento_spawn
             nivel_selecionado = nivel
             config = NIVEIS[nivel_selecionado]
             intervalo_spawn_inimigos = config["intervalo_spawn"]
-            last_spawn_time = pygame.time.get_ticks()
             velocidade_inimigo_atual = config["velocidade_inimigo"]
             aumento_velocidade_inimigo = config["aumento_velocidade"]
             velocidade_aumento_spawn = config["aumento_spawn"]
@@ -236,15 +290,23 @@ while rodando:
                 modo_final_ativado = True
 
             now = pygame.time.get_ticks()
+            
+            # Temporizador para spawn de inimigos
             if now - last_spawn_time > intervalo_spawn_inimigos:
                 last_spawn_time = now
-                
                 if not modo_final_ativado:
                     spawn_inimigo()
                 else:
                     if random.random() < CHANCE_SPAWN_FINAL:
                         spawn_inimigo()
+            
+            # Lógica de spawn do coração com temporizador fixo
+            if nivel_selecionado in [2, 3] and jogador.vida < MAX_VIDAS:
+                if now - last_spawn_time_coracao > INTERVALO_FIXO_SPAWN_CORACAO:
+                    last_spawn_time_coracao = now
+                    spawn_coracao()
 
+            # --- VERIFICAÇÃO DE COLISÕES ---
             for grupo_inimigo in [asteroides_grupo, ovnis_grupo]:
                 colisoes_tiros = pygame.sprite.groupcollide(lasers, grupo_inimigo, True, True)
                 for inimigo in colisoes_tiros.values():
@@ -257,6 +319,12 @@ while rodando:
                 jogador.vida -= len(inimigos_colididos)
                 som_dano_nave.play()
                 spawn_inimigo()
+            
+            colisoes_coracao = pygame.sprite.spritecollide(jogador, coracoes_grupo, True)
+            if colisoes_coracao:
+                if jogador.vida < MAX_VIDAS:
+                    jogador.vida += 1
+                    som_vida_extra.play()
 
             for inimigo in list(asteroides_grupo) + list(ovnis_grupo):
                 if inimigo.rect.top > ALTURA_TELA:
@@ -264,15 +332,17 @@ while rodando:
                     som_dano_nave.play()
                     inimigo.kill()
             
+            # --- VERIFICAÇÃO DE ESTADO DO JOGO ---
             if jogador.vida <= 0 and estado_jogo == ESTADO_JOGANDO:
                 estado_jogo = ESTADO_GAME_OVER
                 if not som_tocado_game_over:
                     som_game_over.play()
                     som_tocado_game_over = True
             
-            if pontuacao >= pontos_vitoria:
+            elif pontuacao >= pontos_vitoria:
                 estado_jogo = ESTADO_VITORIA
 
+            # --- DESENHO NA TELA ---
             todos_sprites.draw(tela)
             show_text(tela, f"Pontuação: {pontuacao}", 25, LARGURA_TELA // 2, 20)
             show_text(tela, f"Vida: {jogador.vida}", 25, LARGURA_TELA - 60, 20)
@@ -293,6 +363,11 @@ while rodando:
             if desenhar_botao("Menu Inicial", LARGURA_TELA//2 - 100, ALTURA_TELA//2 + 100, 200, 60, CINZA, PRETO, fonte_botao, mouse_pos, clique_mouse): estado_jogo = ESTADO_TELA_INICIAL
 
         elif estado_jogo == ESTADO_VITORIA:
+            if not som_tocado_vitoria:
+                pygame.mixer.stop()
+                som_vitoria.play()
+                som_tocado_vitoria = True
+            
             show_text(tela, "VOCÊ VENCEU!", 74, LARGURA_TELA // 2, ALTURA_TELA // 2 - 50, VERDE)
             show_text(tela, f"Pontuação Final: {pontuacao}", 30, LARGURA_TELA // 2, ALTURA_TELA // 2 + 10)
             if desenhar_botao("Jogar de Novo", LARGURA_TELA//2 - 125, ALTURA_TELA//2 + 60, 250, 60, VERDE, PRETO, fonte_botao, mouse_pos, clique_mouse): iniciar_nivel(nivel_selecionado)
