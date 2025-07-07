@@ -2,33 +2,33 @@
 
 Uma homenagem à era de ouro dos arcades, onde apenas seus reflexos podem defender o universo de hordas alienígenas.
 
-![Captura de tela 2025-07-04 000812](https://github.com/user-attachments/assets/a3fdc666-eb44-4c7c-97e0-880ed26b1429)
+![image](https://github.com/user-attachments/assets/7a27e91f-b9c7-4e7c-9330-d2f2220fc83d)
 
-Um clássico jogo de nave 2D com rolagem vertical, desenvolvido em Python com a biblioteca Pygame. Inspirado nos grandes clássicos de arcade, sua missão é defender a galáxia, destruindo ondas de asteroides e OVNIs que ameaçam seu setor.
+Um clássico jogo de nave 2D com rolagem vertical, desenvolvido em Python com o framework **Pygame Zero**. Inspirado nos grandes clássicos de arcade, sua missão é defender a galáxia, destruindo ondas de asteroides e OVNIs que ameaçam seu setor.
 
 ---
 
 ## 🌟 Sobre o Projeto
 
-**Defensores Galácticos** é um projeto criado para praticar e demonstrar conceitos de desenvolvimento de jogos, incluindo manipulação de sprites, detecção de colisões, gerenciamento de estados de jogo (menu, jogando, game over) e interatividade com o usuário. O jogo oferece uma experiência nostálgica e desafiadora, com dificuldade progressiva e um sistema de pontuação para incentivar o jogador a melhorar.
+**Defensores Galácticos** é um projeto criado para praticar e demonstrar conceitos de desenvolvimento de jogos usando **Pygame Zero**, um framework que simplifica o uso da poderosa biblioteca Pygame. O projeto inclui manipulação de atores, detecção de colisões, gerenciamento de estados de jogo (menu, jogando, game over) e interatividade com o usuário. O jogo oferece uma experiência nostálgica e desafiadora, com dificuldade progressiva e um sistema de pontuação para incentivar o jogador a melhorar.
 
 ---
 
 ## ✨ Funcionalidades
 
 * **Navegação e Tiro:** Controle total sobre a nave com movimento livre e disparos de laser.
-* **Inimigos Variados:** Enfrente asteroides e OVNIs com diferentes pontuações.
+* **Inimigos Variados:** Enfrente asteroides e OVNIs com diferentes pontuações e comportamentos.
 * **Níveis de Dificuldade:** Escolha entre Fácil, Médio e Difícil para ajustar a velocidade e a frequência dos inimigos.
 * **Sistema de Pontos e Vidas:** Destrua inimigos para ganhar pontos. O jogador perde vida tanto por colisão direta quanto se deixar um inimigo escapar pela parte inferior da tela.
-* **Múltiplas Telas:** Interface completa com Menu Principal, tela de Instruções, Pausa, Vitória e Game Over.
-* **Clímax de Jogo:** Conforme o jogador se aproxima da pontuação para vencer, a frequência de novos inimigos diminui, criando uma batalha final emocionante para sobreviver aos inimigos restantes.
+* **Múltiplas Telas:** Interface completa com Menu Principal, tela de **Manual**, Pausa, Vitória e Game Over.
+* **Modo Final Frenético:** Conforme o jogador se aproxima da pontuação para vencer, a frequência e a quantidade de novos inimigos **aumentam**, criando uma batalha final emocionante para sobreviver.
 
 ---
 
 ## 🛠️ Tecnologias Utilizadas
 
 * **Python 3**
-* **Pygame**
+* **Pygame Zero** (que utiliza Pygame como base)
 
 ---
 
@@ -42,23 +42,26 @@ Este método é ideal se você tem Git instalado e quer acompanhar as atualizaç
 
 1.  **Clone o repositório:**
     ```bash
-    git clone [https://github.com/mylenaaraujo08/jogo-espacial-pygame.git]
+    git clone [https://github.com/mylenaaraujo08/jogo-espacial-pygame.git](https://github.com/mylenaaraujo08/jogo-espacial-pygame.git)
     ```
 
-2. **Acesse a pasta do projeto:**
+2.  **Acesse a pasta do projeto:**
     ```bash
     cd jogo-espacial-pygame
     ```
 
-3.  **Instale a dependência (Pygame):**
+3.  **Instale a dependência (Pygame Zero):**
     ```bash
-    pip install pygame
+    pip install pgzero
     ```
+    *(Nota: Este comando já instala o Pygame automaticamente.)*
 
 4.  **Execute o jogo:**
     ```bash
-    python defensores_galacticos.py
+    pgzrun defensores_galacticos.py
     ```
+    *(Use o comando `pgzrun`, que é o executor especial para jogos Pygame Zero.)*
+
 ---
 
 ### Opção 2: Para Usuários (via Download do ZIP)
@@ -69,24 +72,21 @@ Este é o método mais simples se você não usa Git.
     * Na página principal do repositório, clique no botão verde **`< > Code`**.
     * No menu que aparecer, clique em **`Download ZIP`**.
 
-2. **Acesse a pasta do projeto:**
-    ```bash
-    cd jogo-espacial-pygame
-    ```
-    
-3.   **Extraia o arquivo:**
-    * Encontre o arquivo `jogo-espacial-pygame-main.zip` que você baixou e descompacte-o em um local de sua preferência.
+2.  **Extraia o arquivo:**
+    * Encontre o arquivo `.zip` que você baixou e descompacte-o em um local de sua preferência.
 
-4. **Instale a dependência (Pygame):**
+3.  **Abra o terminal na pasta do projeto:**
+    * Navegue pelo seu terminal (CMD, PowerShell, etc.) até a pasta que você extraiu (ex: `cd Downloads/jogo-espacial-pygame-main`).
+
+4.  **Instale a dependência (Pygame Zero):**
     ```bash
-    pip install pygame
+    pip install pgzero
     ```
 
 5.  **Execute o jogo:**
     ```bash
-    python defensores_galacticos.py
+    pgzrun defensores_galacticos.py
     ```
----
 
 ---
 
